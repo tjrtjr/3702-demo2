@@ -5,15 +5,16 @@ import numpy as np
 import torch
 
 
-# 讲义给出的信号参数
+# 讲义原代码给出的信号参数
 N = 2048
 T = 1.0
 f0 = 1
+# 讲义先比较 1、3、5 项，作业要求继续比较 20、50 项
 harmonics = [1, 3, 5, 20, 50]
 has_cuda = torch.cuda.is_available()
 
 
-# 以下三个 NumPy 函数沿用讲义写法
+# 下面三个 NumPy 核心函数直接复制自讲义，只把英文注释改成中文
 def square_wave(t):
     return np.sign(np.sin(2.0 * np.pi * f0 * t))
 
@@ -29,6 +30,7 @@ def square_wave_fourier(t, f0, N):
 def naive_dft(x):
     N = len(x)
     X = np.zeros(N, dtype=np.complex128)
+    # 按 DFT 公式逐项计算，因此时间复杂度为 O(N²)
     for k in range(N):
         for n in range(N):
             angle = -2j * np.pi * k * n / N
@@ -53,6 +55,7 @@ def naive_dft_torch(x):
     N = x.numel()
     n = torch.arange(N, device=x.device, dtype=x.dtype)
     k = n[:, None]
+    # 一次构造所有频率与采样点的指数项，再用矩阵乘法并行求和
     matrix = torch.exp(-2j * torch.pi * k * n / N)
     return matrix @ x.to(matrix.dtype)
 
@@ -90,6 +93,7 @@ for i, Nh in enumerate(harmonics, start=2):
     plt.grid(True)
     plt.legend()
 
+# 项数越多，边缘越陡；但跳变处仍有 Gibbs 过冲，只是振荡区域变窄
 plt.tight_layout()
 
 
@@ -124,15 +128,13 @@ ax2.plot(xf, magnitude, color="m")
 ax2.set_title("Discrete Fourier Transform (Magnitude Spectrum)")
 ax2.set_xlabel("Frequency (Hz)")
 ax2.set_ylabel("Magnitude")
-ax2.set_xlim(0, 105)  # 50 项对应 1 到 99 Hz 的奇次谐波
+# 50 项正好对应 1、3、5、…、99 Hz，其他位置只剩有限采样和浮点误差
+ax2.set_xlim(0, 105)
 expected_frequencies = np.arange(1, 100, 2)
 ax2.scatter(expected_frequencies, magnitude[expected_frequencies], s=15, label="Odd harmonics")
 ax2.legend()
 
 plt.tight_layout()
-
-print("频谱峰值位于 1、3、5、…、99 Hz，与构造方波使用的 50 个奇次谐波一致。")
-print("其他位置的微小数值来自有限采样和浮点误差；有限项也无法得到完全理想的方波。")
 
 
 # 3. 检查 PyTorch 改写结果
@@ -168,13 +170,12 @@ for size in sizes:
     numpy_naive = elapsed(naive_dft, x_numpy)
     numpy_fft = elapsed(np.fft.fft, x_numpy, repeats=100)
     torch_cpu = elapsed(naive_dft_torch, x_torch)
+    # 输入先放到 GPU，因此计时只包含计算；小 N 时启动和同步开销可能抵消并行优势
     x_gpu = x_torch.to("cuda") if has_cuda else None
     torch_gpu = elapsed(naive_dft_torch, x_gpu, repeats=3, gpu=True) if has_cuda else None
     timings.append([size, numpy_naive, numpy_fft, torch_cpu, torch_gpu])
 
 print("\n--- 不同数据大小的运行时间（秒）---")
-if has_cuda:
-    print("GPU 计时只包含计算，输入在计时前已经放到显卡。")
 print(f"{'N':>6} {'NumPy 朴素':>14} {'NumPy FFT':>14} {'PyTorch CPU':>14} {'PyTorch GPU':>14}")
 for size, numpy_naive, numpy_fft, torch_cpu, torch_gpu in timings:
     gpu_text = f"{torch_gpu:.6f}" if torch_gpu is not None else "待 Rangpur"
@@ -185,6 +186,7 @@ times = timings[-1][1:4]
 if timings[-1][4] is not None:
     names.append("PyTorch 朴素 DFT（GPU）")
     times.append(timings[-1][4])
+# FFT 是 O(N log N)；两个朴素 DFT 都是 O(N²)，PyTorch 版本依靠张量并行加速
 order = [name for _, name in sorted(zip(times, names))]
 print("N=2048 从快到慢：" + " < ".join(order))
 
@@ -200,9 +202,6 @@ plt.title("DFT Timing Comparison")
 plt.legend()
 plt.tight_layout()
 
-print("\n说明：增加奇次谐波会让方波边缘更陡，但跳变处的 Gibbs 过冲不会消失。")
-print("朴素 DFT 是 O(N²)，FFT 约为 O(N log N)，所以数据越大，FFT 的优势越明显。")
-print("PyTorch 用张量矩阵运算代替 Python 双循环；GPU 可以并行，但小 N 的启动和同步开销仍可能占主导。")
 if not has_cuda:
     print("本机没有 CUDA；GPU 一列需要在 Rangpur 上运行同一脚本补齐。")
 
