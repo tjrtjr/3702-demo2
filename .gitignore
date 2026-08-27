@@ -1,0 +1,39 @@
+# Editors and operating-system files
+.idea/
+.vscode/
+.DS_Store
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local data, model weights, and high-volume run outputs
+/data/
+/datasets/
+/checkpoints/
+/models/
+/runs/
+/wandb/
+/lightning_logs/
+/outputs/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Temporary files and local caches
+tmp/
+.matplotlib/
+scikit_learn_data/
+
+# Course material/reference copies should not be republished with the solution
+COMP3710_Lab_2_2026_v2.01.pdf
+references/course_starter/*.ipynb
