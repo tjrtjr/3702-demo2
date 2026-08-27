@@ -30,6 +30,17 @@ Append one section per meaningful run. Do not overwrite an earlier result merely
 |---|---:|---|---|---|---:|---:|---|---:|---:|---|
 | | | | | | | | | | | |
 
+### Local CPU validation — 2026-08-27 16:24 AEST
+
+- Command: `MPLBACKEND=Agg .venv/bin/python part1.py`
+- Host: Apple Silicon CPU, macOS 26.6.2; CUDA unavailable
+- Environment: Python 3.11.15, NumPy 2.4.6, PyTorch 2.13.0
+- Dtype: `float64` input and `complex128` DFT
+- Correctness: NumPy naive DFT, PyTorch CPU naive DFT, and NumPy FFT all agreed (`allclose=True`)
+- At `N=2048`: NumPy FFT ≈ 0.00001 s, PyTorch CPU naive DFT ≈ 0.014 s, NumPy naive DFT ≈ 1.01 s
+- Plot check: Fourier reconstruction, odd-harmonic spectrum, and timing curve rendered correctly
+- Remaining work: run the CUDA branch on Rangpur and record its timing
+
 ## Model result summary
 
 | Run | Task | Model | Test metric | Time | Hardware | Checkpoint | Notes |

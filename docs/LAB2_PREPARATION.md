@@ -1,6 +1,6 @@
 # Lab 2 coding preparation
 
-Prepared from the complete 13-page Version 2.01 lab sheet and its linked starter notebooks. No assessment implementation has been written yet.
+Prepared from the complete 13-page Version 2.01 lab sheet and its linked starter notebooks. Part 1 code is in `part1.py`; the CPU path is validated and CUDA timing remains to be run on Rangpur.
 
 ## Decisions already made
 

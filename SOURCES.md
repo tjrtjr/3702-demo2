@@ -10,6 +10,8 @@ Keep this file current as code is written. Clearly distinguish course-provided c
 
 Unmodified local copies of the two notebooks are kept under `references/course_starter/` and ignored by Git. Any modified assessment notebook must identify which cells were adapted.
 
+The NumPy functions and initial plotting structure in `part1.py` are adapted from these course sources. The PyTorch tensor versions, CUDA execution, and size benchmark are the submitted extension.
+
 ## Data and reference implementations named by the lab sheet
 
 - Labeled Faces in the Wild: <http://vis-www.cs.umass.edu/lfw/>
@@ -26,6 +28,7 @@ Unmodified local copies of the two notebooks are kept under `references/course_s
 | Date | Tool/model | Purpose | Material affected | Human verification performed |
 |---|---|---|---|---|
 | 2026-08-27 | OpenAI Codex | Read the full PDF, extract requirements, audit ambiguities, and prepare the coding scaffold | `README.md`, `docs/`, `requirements.txt`, `.gitignore`, `SOURCES.md` | All 13 pages were text-extracted and visually checked; official linked notebooks were downloaded and compared with the PDF |
+| 2026-08-27 | OpenAI Codex | Implement Part 1 from the course code, add the required PyTorch/CUDA DFT and timing comparison, and write Chinese explanatory comments | `part1.py`, `README.md`, `docs/LAB2_PREPARATION.md`, `SOURCES.md` | Full CPU run completed; three numerical comparisons returned `True`; all three figures were rendered and inspected; CUDA branch remains to be run on Rangpur |
 | | | | | |
 
 For future entries, summarise the prompt/task and the substantive suggestions used. Do not claim AI-generated code as independently authored; review, test, and be able to explain every retained line.

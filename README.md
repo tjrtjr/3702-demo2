@@ -1,6 +1,6 @@
 # COMP3710 Lab Demonstration 2
 
-This repository is prepared for the 2026 Pattern Recognition Lab Demonstration 2. The implementation has intentionally not started yet; the requirements, environment, references, experiment protocol, and Git structure are ready so coding can begin with Part 1.
+This repository is prepared for the 2026 Pattern Recognition Lab Demonstration 2. Part 1 is implemented as a single lecture-aligned Python script; the remaining requirements, environment, references, and experiment protocol are also recorded here.
 
 PyTorch is the default framework because it can cover the tensor DFT, LFW CNN, CIFAR-10 ResNet-18, mixed-precision A100 training, and the optional OASIS tasks without switching frameworks. This is a working default, not a restriction imposed by the lab sheet.
 
@@ -26,7 +26,7 @@ uv venv --python 3.11 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
 source .venv/bin/activate
 python -c "import numpy, sklearn, torch, torchvision; print(torch.__version__); print('MPS:', torch.backends.mps.is_available()); print('CUDA:', torch.cuda.is_available())"
-jupyter lab
+python part1.py
 ```
 
 Local CPU execution is enough for Parts 1-3 smoke tests. The required CUDA timing, DAWNBench training, and OASIS work must be validated on UQ's Rangpur cluster; do not treat a local Apple GPU result as the required cluster demonstration.
@@ -34,7 +34,8 @@ Local CPU execution is enough for Parts 1-3 smoke tests. The required CUDA timin
 ## Project layout
 
 ```text
-notebooks/               exploratory work for Parts 1 and 2
+part1.py                 Part 1 Fourier, DFT, PyTorch, and timing work
+notebooks/               optional exploratory work
 src/comp3710_lab2/       reusable models, data, metrics, and training code
 scripts/                 command-line train/evaluate/infer entry points
 slurm/                   Rangpur job scripts and demo commands
@@ -57,4 +58,4 @@ Large datasets, checkpoints, transient logs, the course PDF, and the copied star
 
 ## First coding milestone
 
-Start with Part 1. Copy the official square-wave notebook into `notebooks/01_dft.ipynb` and keep the reference copy unchanged. Reimplement `square_wave`, `square_wave_fourier`, and `naive_dft` with PyTorch operations, while retaining NumPy naive DFT and NumPy FFT as baselines. Verify tensor naive DFT on CPU and CUDA without calling `torch.fft`; the primary timing comparison should report at least the three methods explicitly requested by the sheet.
+Run `python part1.py`. The script keeps the lecture's NumPy functions and plots, then reimplements `square_wave`, `square_wave_fourier`, and `naive_dft` with PyTorch operations. It verifies the explicit tensor DFT without `torch.fft` and compares timings across several input sizes. CUDA timing is filled automatically when the same script runs on Rangpur.
