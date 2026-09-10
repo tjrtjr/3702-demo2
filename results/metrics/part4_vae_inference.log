@@ -1,0 +1,4 @@
+Device: cpu
+Loaded epoch 26 from /Users/junrongtang/Desktop/3710 demo2/results/part4.pt
+Test loss/image: 1088.1556755514705
+Saved test reconstructions and the 2D latent manifold beside the checkpoint.

@@ -1,0 +1,13 @@
+{
+  "task": "Part 4 Task 3: OASIS DCGAN",
+  "device": "NVIDIA A100-PCIE-40GB on Rangpur",
+  "slurm_job": 586524,
+  "epochs": 30,
+  "training_seconds": 283.33860026625916,
+  "training_slices": 9664,
+  "image_size": 64,
+  "training_iterations": 4530,
+  "all_losses_finite": true,
+  "checkpoint": "results/part4_3.pt",
+  "visual_check": "Brain outlines, ventricles and tissue patterns differ across generated samples; assess image realism from the saved grids, not loss alone."
+}

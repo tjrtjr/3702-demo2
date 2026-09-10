@@ -1,0 +1,19 @@
+--- DFT/FFT 正确性与速度 ---
+朴素 DFT: 4.231139 秒
+NumPy FFT: 0.000079 秒
+结果一致: True
+
+--- PyTorch 改写检查 ---
+方波一致: True
+傅里叶近似一致: True
+PyTorch 朴素 DFT 一致: True
+GPU 设备: cuda:0
+GPU 朴素 DFT 一致: True
+
+--- 不同数据大小的运行时间（秒）---
+     N       NumPy 朴素      NumPy FFT    PyTorch GPU
+   256       0.064553       0.000009       0.000235
+   512       0.262303       0.000011       0.000135
+  1024       1.028462       0.000016       0.000160
+  2048       4.108541       0.000031       0.000498
+N=2048 从快到慢：NumPy FFT < PyTorch 朴素 DFT（GPU） < NumPy 朴素 DFT

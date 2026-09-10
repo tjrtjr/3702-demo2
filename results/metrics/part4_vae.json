@@ -1,0 +1,14 @@
+{
+  "task": "Part 4 Task 1: VAE",
+  "data_source": "Lab sheet Preprocessed OASIS archive",
+  "data_split": "course train/validate/test; 9664/1120/544 slices; disjoint subjects",
+  "device": "CPU",
+  "epochs_run": 30,
+  "selected_epoch": 26,
+  "validation_loss_per_image": 1075.2113839285714,
+  "test_loss_per_image": 1088.1927849264705,
+  "training_validation_seconds": 159.79,
+  "model": "official PyTorch VAE MLP; 4096-400-2-400-4096; 64x64 grayscale",
+  "checkpoint": "results/part4.pt",
+  "source": "https://github.com/pytorch/examples/blob/main/vae/main.py"
+}

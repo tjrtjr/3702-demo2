@@ -124,14 +124,19 @@ ax1.set_title("Input Square Wave Signal")
 ax1.set_xlabel("Time (s)")
 ax1.set_ylabel("Amplitude")
 
-ax2.plot(xf, magnitude, color="m")
+ax2.stem(xf, magnitude, basefmt="")
 ax2.set_title("Discrete Fourier Transform (Magnitude Spectrum)")
 ax2.set_xlabel("Frequency (Hz)")
 ax2.set_ylabel("Magnitude")
-# 50 项正好对应 1、3、5、…、99 Hz，其他位置只剩有限采样和浮点误差
-ax2.set_xlim(0, 105)
-expected_frequencies = np.arange(1, 100, 2)
-ax2.scatter(expected_frequencies, magnitude[expected_frequencies], s=15, label="Odd harmonics")
+# 按讲义显示 0–50 Hz，并标出前十个奇次谐波。
+# 50 项实际包含 1、3、5、…、99 Hz，超出显示范围的分量仍在 DFT 结果中。
+ax2.set_xlim(0, 50)
+for i in range(20):
+    if i < len(xf) and i % 2 == 1:
+        ax2.axvline(
+            xf[i], color="r", linestyle="--", alpha=0.7,
+            label=f"f{i}: {i}*f0 = {xf[i]:.1f} Hz",
+        )
 ax2.legend()
 
 plt.tight_layout()
@@ -154,7 +159,7 @@ if has_cuda:
     print(f"GPU 朴素 DFT 一致: {np.allclose(dft_gpu.cpu().numpy(), fft_result)}")
 
 
-# 4. 改变数据大小并比较计算时间
+# 4. 比较作业指定的三种方法：NumPy 朴素 DFT、NumPy FFT、PyTorch GPU 朴素 DFT
 sizes = [256, 512, 1024, 2048]
 timings = []
 
@@ -169,38 +174,25 @@ for size in sizes:
 
     numpy_naive = elapsed(naive_dft, x_numpy)
     numpy_fft = elapsed(np.fft.fft, x_numpy, repeats=100)
-    torch_cpu = elapsed(naive_dft_torch, x_torch)
     # 输入先放到 GPU，因此计时只包含计算；小 N 时启动和同步开销可能抵消并行优势
     x_gpu = x_torch.to("cuda") if has_cuda else None
     torch_gpu = elapsed(naive_dft_torch, x_gpu, repeats=3, gpu=True) if has_cuda else None
-    timings.append([size, numpy_naive, numpy_fft, torch_cpu, torch_gpu])
+    timings.append([size, numpy_naive, numpy_fft, torch_gpu])
 
 print("\n--- 不同数据大小的运行时间（秒）---")
-print(f"{'N':>6} {'NumPy 朴素':>14} {'NumPy FFT':>14} {'PyTorch CPU':>14} {'PyTorch GPU':>14}")
-for size, numpy_naive, numpy_fft, torch_cpu, torch_gpu in timings:
+print(f"{'N':>6} {'NumPy 朴素':>14} {'NumPy FFT':>14} {'PyTorch GPU':>14}")
+for size, numpy_naive, numpy_fft, torch_gpu in timings:
     gpu_text = f"{torch_gpu:.6f}" if torch_gpu is not None else "待 Rangpur"
-    print(f"{size:>6} {numpy_naive:>14.6f} {numpy_fft:>14.6f} {torch_cpu:>14.6f} {gpu_text:>14}")
+    print(f"{size:>6} {numpy_naive:>14.6f} {numpy_fft:>14.6f} {gpu_text:>14}")
 
-names = ["NumPy 朴素 DFT", "NumPy FFT", "PyTorch 朴素 DFT（CPU）"]
-times = timings[-1][1:4]
-if timings[-1][4] is not None:
+names = ["NumPy 朴素 DFT", "NumPy FFT"]
+times = timings[-1][1:3]
+if timings[-1][3] is not None:
     names.append("PyTorch 朴素 DFT（GPU）")
-    times.append(timings[-1][4])
-# FFT 是 O(N log N)；两个朴素 DFT 都是 O(N²)，PyTorch 版本依靠张量并行加速
+    times.append(timings[-1][3])
+# FFT 是 O(N log N)；两个朴素 DFT 是 O(N²)，GPU 版本依靠张量并行加速
 order = [name for _, name in sorted(zip(times, names))]
 print("N=2048 从快到慢：" + " < ".join(order))
-
-plt.figure(figsize=(8, 5))
-plt.loglog(sizes, [row[1] for row in timings], "o-", label="NumPy naive DFT")
-plt.loglog(sizes, [row[2] for row in timings], "o-", label="NumPy FFT")
-plt.loglog(sizes, [row[3] for row in timings], "o-", label="PyTorch naive DFT (CPU)")
-if has_cuda:
-    plt.loglog(sizes, [row[4] for row in timings], "o-", label="PyTorch naive DFT (GPU)")
-plt.xlabel("N")
-plt.ylabel("Time (s)")
-plt.title("DFT Timing Comparison")
-plt.legend()
-plt.tight_layout()
 
 if not has_cuda:
     print("本机没有 CUDA；GPU 一列需要在 Rangpur 上运行同一脚本补齐。")

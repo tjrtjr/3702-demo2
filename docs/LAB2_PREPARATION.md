@@ -1,5 +1,7 @@
 # Lab 2 coding preparation
 
+Historical preparation notes from 2026-08-27. For current code, measured results and remaining assessment items, use `README.md` and `docs/EXPERIMENT_LOG.md`. Additional suggestions below are not extra lab requirements. The course OASIS data and Rangpur GPU access have since been verified, and all three Part 4 models have now been implemented and trained.
+
 Prepared from the complete 13-page Version 2.01 lab sheet and its linked starter notebooks. Part 1 code is in `part1.py`; the CPU path is validated and CUDA timing remains to be run on Rangpur.
 
 ## Decisions already made

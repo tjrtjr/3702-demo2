@@ -1,0 +1,23 @@
+{
+  "task": "Part 4 Task 2: UNet",
+  "device": "NVIDIA A100-PCIE-40GB on Rangpur",
+  "slurm_job": 586521,
+  "epochs_run": 12,
+  "selected_epoch": 3,
+  "validation_dice": [
+    0.9989576146987263,
+    0.9343415585081825,
+    0.9518083295413393,
+    0.9734748515200423
+  ],
+  "test_images": 544,
+  "test_dice_by_original_mask_value": {
+    "0": 0.998847,
+    "85": 0.937156,
+    "170": 0.947372,
+    "255": 0.971544
+  },
+  "all_test_labels_above_0_9": true,
+  "dice_definition": "2 intersection / (predicted count + ground-truth count), aggregated per class over full course test split",
+  "checkpoint": "results/part4_2.pt"
+}

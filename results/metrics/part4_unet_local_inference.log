@@ -1,0 +1,9 @@
+Device: cpu
+Loaded: results/part4_2.pt epoch: 3
+Test images: 544
+Label 0 (mask value 0): test DSC = 0.998847
+Label 1 (mask value 85): test DSC = 0.937155
+Label 2 (mask value 170): test DSC = 0.947369
+Label 3 (mask value 255): test DSC = 0.971544
+Every label DSC > 0.9: True
+Saved segmentation examples: results/part4_2.png

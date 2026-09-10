@@ -6,7 +6,7 @@ import numpy as np
 # Download the data , if not already on disk and load it as numpy arrays
 lfw_dataset = fetch_lfw_people(min_faces_per_person=70, resize=0.4)
 #introspect the images arrays to find the shapes (for plotting)
-n_samples, h, w = lfw_dataset.data.shape
+n_samples, h, w = lfw_dataset.images.shape
 #for machine learning we use the 2 data directly
 X = lfw_dataset.data
 n_features = X.shape[1]
@@ -14,7 +14,7 @@ n_features = X.shape[1]
 # The label to predict is the ID of the person
 y = lfw_dataset.target
 target_names = lfw_dataset.target_names
-n_classes = X.shape[0]
+n_classes = target_names.shape[0]
 
 print("Total dataset size: ", )
 print("n_samples: %d"  % n_samples)
@@ -61,11 +61,11 @@ plt.show()
 explained_variance = (S ** 2)/(n_samples - 1)
 total_variance = explained_variance.sum()
 explained_variance_ratio = explained_variance / total_variance
-ration_cumsum = np.cumsum(explained_variance_ratio)
-print(ration_cumsum.sahpe)
+ratio_cumsum = np.cumsum(explained_variance_ratio)
+print(ratio_cumsum.shape)
 eigenvalueCount = np.arange(n_components)
 
-plt.plot(eigenvalueCount, ration_cumsum[:n_components])
+plt.plot(eigenvalueCount, ratio_cumsum[:n_components])
 plt.title("Compactness")
 plt.show()
 
@@ -85,6 +85,6 @@ print("Total Testing", total_test)
 print("Predictions", predictions)
 print("Which Correct", correct)
 print("Total Correct", np.sum(correct))
-print("Accuracy", np.sum(correct / total_test))
+print("Accuracy", np.sum(correct) / total_test)
 
 print(classification_report(y_test, predictions, target_names=target_names))
