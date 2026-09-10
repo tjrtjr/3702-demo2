@@ -2,6 +2,8 @@
 
 Actual runs are recorded below. Part 3.2 accuracy, GPU timing and Rangpur demonstration remain unverified; synthetic checks are not evidence of those outcomes. All dates and cluster clock times use AEST.
 
+Result paths below reflect the organization by experiment. Original logs retain their historical paths and job numbers; measured values and model weights were not changed by the move.
+
 ## Parts 1–3 local validation
 
 ### 2026-08-27 — earlier Part 1 implementation
@@ -31,7 +33,7 @@ Actual runs are recorded below. Part 3.2 accuracy, GPU timing and Rangpur demons
 - Command: `OMP_NUM_THREADS=4 .venv/bin/python src/comp3710_lab2/part4.py`. Completed **30 CPU epochs in 159.79 seconds**, including validation. Validation selected epoch **26**.
 - Validation BCE+KL/image: **1075.211**; test BCE+KL/image: **1088.193**. These are objective values, not accuracy percentages.
 - Fresh-process `--evaluate` loaded the model and reported **1088.156** test loss/image. Posterior sampling explains the small change. Reconstructions retain brain structure with smoothing; the 2D prior grid shows changing shape and appearance.
-- Model: `results/part4.pt`. Figures: `results/part4_reconstructions.png`, `results/part4_manifold.png`. Logs and summary: `results/metrics/part4_vae*`.
+- Model: `results/part4_vae/model.pt`. Figures: `results/part4_vae/reconstructions.png`, `results/part4_vae/manifold.png`. Logs and summary: `results/part4_vae/training.log`, `inference.log`, `metrics.json`.
 
 ## Rangpur execution — 2026-09-10
 
@@ -43,17 +45,17 @@ Actual runs are recorded below. Part 3.2 accuracy, GPU timing and Rangpur demons
 
 - Completed **12 epochs**. Validation selected epoch **3** before evaluating the held-out **544** test images.
 - Pixel-aggregated test DSC for labels 0/85/170/255: **0.998847 / 0.937156 / 0.947372 / 0.971544**, all >0.9.
-- Model: `results/part4_2.pt`; segmentation examples: `results/part4_2.png`, visually checked against ground truth. Full training log: `results/metrics/unet-586521.log`; summary: `results/metrics/part4_unet.json`.
-- Fresh-process local CPU `part4_2.py --evaluate` tested the same 544 images: **0.998847 / 0.937155 / 0.947369 / 0.971544**. Small differences from CUDA AMP are numerical. Log: `results/metrics/part4_unet_local_inference.log`.
+- Model: `results/part4_unet/model.pt`; segmentation examples: `results/part4_unet/segmentation.png`, visually checked against ground truth. Full training log: `results/part4_unet/training.log`; summary: `results/part4_unet/metrics.json`.
+- Fresh-process local CPU `part4_2.py --evaluate` tested the same 544 images: **0.998847 / 0.937155 / 0.947369 / 0.971544**. Small differences from CUDA AMP are numerical. Log: `results/part4_unet/inference.log`.
 
 ### Part 1 GPU timing
 
 - CUDA DFT matched NumPy FFT. At **N=2048**: NumPy FFT **0.000031 s**, PyTorch explicit CUDA DFT **0.000498 s**, NumPy naive DFT **4.108541 s**.
-- All four input sizes and correctness checks are recorded in `results/metrics/part1_gpu.log`. Times are observed averages under the script's timing protocol, not medians or guarantees for other hardware.
+- All four input sizes and correctness checks are recorded in `results/part1/gpu_timing.log`. Times are observed averages under the script's timing protocol, not medians or guarantees for other hardware.
 
 ### GAN
 
 - Completed **30 epochs / 4,530 mini-batches** over all **9,664** training slices in **283.34 seconds**. All recorded generator/discriminator losses are finite.
-- Model: `results/part4_3.pt`; loss history: `results/part4_3.json`; training log: `results/metrics/gan-586524.log`; summary: `results/metrics/part4_gan.json`.
-- Figures are retained in `results/figures/part4_3/`. Epoch 10, final GPU samples, loss curve and fresh local CPU samples were inspected: contours, ventricles and tissue patterns visibly vary. This qualitative check does not establish a numerical realism score or exhaustively rule out mode collapse; image realism is judged at the demonstration.
-- Fresh-process `part4_3.py --evaluate` loaded the model and generated new samples. `generated_gpu.png` preserves the original GPU grid; `generated.png` is the local inference grid. Inference log: `results/metrics/part4_gan_local_inference.log`.
+- Model: `results/part4_gan/model.pt`; loss history: `results/part4_gan/history.json`; training log: `results/part4_gan/training.log`; summary: `results/part4_gan/metrics.json`.
+- Figures are retained in `results/part4_gan/`. Epoch 10, final GPU samples, loss curve and fresh local CPU samples were inspected: contours, ventricles and tissue patterns visibly vary. This qualitative check does not establish a numerical realism score or exhaustively rule out mode collapse; image realism is judged at the demonstration.
+- Fresh-process `part4_3.py --evaluate` loaded the model and generated new samples. `generated_gpu.png` preserves the original GPU grid; `generated.png` is the local inference grid. Inference log: `results/part4_gan/inference.log`.

@@ -85,14 +85,14 @@ def visualize(model, dataset, device, checkpoint):
     mu, _ = model.encode(originals.flatten(1))
     reconstructed = model.decode(mu).view(-1, 1, 64, 64)
     save_image(torch.cat([originals, reconstructed]).cpu(),
-               checkpoint.with_name(checkpoint.stem + "_reconstructions.png"), nrow=8)
+               checkpoint.parent / "reconstructions.png", nrow=8)
 
     # 讲义允许直接采样展示流形：行/列分别改变两个潜变量。
     coordinates = torch.linspace(-2, 2, 10, device=device)
     zy, zx = torch.meshgrid(coordinates, coordinates, indexing="ij")
     z = torch.stack([zx.flatten(), zy.flatten()], dim=1)
     manifold = model.decode(z).view(-1, 1, 64, 64)
-    save_image(manifold.cpu(), checkpoint.with_name(checkpoint.stem + "_manifold.png"), nrow=10)
+    save_image(manifold.cpu(), checkpoint.parent / "manifold.png", nrow=10)
 
 
 def main():
@@ -100,7 +100,7 @@ def main():
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--checkpoint", type=Path,
-                        default=Path(__file__).resolve().parents[2] / "results/part4.pt")
+                        default=Path(__file__).resolve().parents[2] / "results/part4_vae/model.pt")
     parser.add_argument("--evaluate", action="store_true")
     args = parser.parse_args()
     if args.epochs < 1:

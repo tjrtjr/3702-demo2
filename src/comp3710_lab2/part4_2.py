@@ -107,7 +107,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--epochs", type=int, default=30)
-    parser.add_argument("--checkpoint", type=Path, default=Path("results/part4_2.pt"))
+    parser.add_argument("--checkpoint", type=Path,
+                        default=Path(__file__).resolve().parents[2] / "results/part4_unet/model.pt")
     parser.add_argument("--evaluate", action="store_true")
     args = parser.parse_args()
     if args.epochs < 1:
@@ -166,7 +167,7 @@ def main():
     for label, value in enumerate((0, 85, 170, 255)):
         print(f"Label {label} (mask value {value}): test DSC = {test_dice[label]:.6f}")
     print("Every label DSC > 0.9:", bool((test_dice > 0.9).all()), flush=True)
-    figure_path = args.checkpoint.with_suffix(".png")
+    figure_path = args.checkpoint.parent / "segmentation.png"
     save_segmentation(examples, figure_path)
     print("Saved segmentation examples:", figure_path, flush=True)
 

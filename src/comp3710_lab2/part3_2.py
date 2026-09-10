@@ -158,8 +158,8 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     workers = 2 if device.type == "cuda" else 0
-    checkpoint = args.checkpoint or PROJECT_ROOT / "results" / (
-        "part3_2_demo.pt" if args.epochs < EPOCHS and not args.evaluate else "part3_2.pt"
+    checkpoint = args.checkpoint or PROJECT_ROOT / "results" / "part3_2" / (
+        "demo/model.pt" if args.epochs < EPOCHS and not args.evaluate else "model.pt"
     )
     torch.manual_seed(42)
     print(f"Device: {device}; mixed precision: {device.type == 'cuda'}")

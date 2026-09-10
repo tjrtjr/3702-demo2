@@ -9,6 +9,6 @@
   "test_loss_per_image": 1088.1927849264705,
   "training_validation_seconds": 159.79,
   "model": "official PyTorch VAE MLP; 4096-400-2-400-4096; 64x64 grayscale",
-  "checkpoint": "results/part4.pt",
+  "checkpoint": "results/part4_vae/model.pt",
   "source": "https://github.com/pytorch/examples/blob/main/vae/main.py"
 }

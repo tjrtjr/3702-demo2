@@ -19,5 +19,5 @@
   },
   "all_test_labels_above_0_9": true,
   "dice_definition": "2 intersection / (predicted count + ground-truth count), aggregated per class over full course test split",
-  "checkpoint": "results/part4_2.pt"
+  "checkpoint": "results/part4_unet/model.pt"
 }

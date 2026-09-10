@@ -8,6 +8,6 @@
   "image_size": 64,
   "training_iterations": 4530,
   "all_losses_finite": true,
-  "checkpoint": "results/part4_3.pt",
+  "checkpoint": "results/part4_gan/model.pt",
   "visual_check": "Brain outlines, ventricles and tissue patterns differ across generated samples; assess image realism from the saved grids, not loss alone."
 }

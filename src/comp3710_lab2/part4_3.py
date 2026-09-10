@@ -133,7 +133,7 @@ def main():
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--checkpoint", type=Path,
-                        default=PROJECT_ROOT / "results" / "part4_3.pt")
+                        default=PROJECT_ROOT / "results" / "part4_gan" / "model.pt")
     parser.add_argument("--evaluate", action="store_true")
     args = parser.parse_args()
     if args.epochs < 1:
@@ -144,8 +144,7 @@ def main():
     if device.type == "cuda":
         print(torch.cuda.get_device_name(device))
     args.checkpoint.parent.mkdir(parents=True, exist_ok=True)
-    figure_dir = args.checkpoint.parent / "figures" / args.checkpoint.stem
-    figure_dir.mkdir(parents=True, exist_ok=True)
+    figure_dir = args.checkpoint.parent
 
     if args.evaluate:
         generator = Generator().to(device)
@@ -158,6 +157,8 @@ def main():
         print(f"Loaded {args.checkpoint} ({saved['epochs']} epochs); saved {path}")
         return
 
+    epoch_dir = figure_dir / "epochs"
+    epoch_dir.mkdir(parents=True, exist_ok=True)
     torch.manual_seed(999)
     train_data = OASISDataset(args.data_dir, "train")
     workers = 2 if device.type == "cuda" else 0
@@ -193,7 +194,7 @@ def main():
                 print(f"Epoch {epoch + 1}/{args.epochs}, batch {batch_index + 1}/{len(loader)}: "
                       f"G={loss_g:.4f}, D={loss_d:.4f}", flush=True)
 
-        save_generated(generator, fixed_noise, figure_dir / f"epoch_{epoch + 1:03d}.png")
+        save_generated(generator, fixed_noise, epoch_dir / f"epoch_{epoch + 1:03d}.png")
         if device.type == "cuda":
             torch.cuda.synchronize()
         training_seconds = time.perf_counter() - start
@@ -202,7 +203,7 @@ def main():
                     "epochs": epoch + 1, "image_size": IMAGE_SIZE,
                     "fixed_noise": fixed_noise.cpu(), "history": history,
                     "training_seconds": training_seconds}, args.checkpoint)
-        args.checkpoint.with_suffix(".json").write_text(json.dumps(history), encoding="utf-8")
+        (args.checkpoint.parent / "history.json").write_text(json.dumps(history), encoding="utf-8")
         fig, ax = plt.subplots(figsize=(10, 5))
         ax.plot(history["generator"], label="G")
         ax.plot(history["discriminator"], label="D")
