@@ -9,6 +9,7 @@ venv/
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
+*.ipynb
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -36,4 +37,3 @@ scikit_learn_data/
 
 # Course material/reference copies should not be republished with the solution
 COMP3710_Lab_2_2026_v2.01.pdf
-references/course_starter/*.ipynb
