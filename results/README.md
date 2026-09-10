@@ -7,6 +7,7 @@
 | 目录 | 先打开的文件 | 其余文件 |
 |---|---|---|
 | `part1/` | [GPU 计时](part1/gpu_timing.log) | 包含四种输入大小及正确性检查 |
+| `part3_2/` | [准确率与耗时](part3_2/metrics.json)、[35 轮训练日志](part3_2/training.log)、[独立推理日志](part3_2/inference.log) | 正式 `model.pt`；单轮模型及日志放在 `demo/` |
 | `part4_vae/` | [流形图](part4_vae/manifold.png)、[重建图](part4_vae/reconstructions.png) | `model.pt`、`metrics.json`、训练和推理日志 |
 | `part4_unet/` | [分割对照图](part4_unet/segmentation.png)、[逐类 DSC](part4_unet/metrics.json) | `model.pt`、训练和推理日志 |
 | `part4_gan/` | [生成脑图](part4_gan/generated.png)、[训练损失图](part4_gan/loss.png) | `model.pt`、`metrics.json`、原始损失和日志；逐轮图片统一放在 `epochs/` |
@@ -22,7 +23,7 @@
 | Part 1，1 分，p2–5 | 方波与不同谐波数的重建、DFT 频谱；解释增加谐波后的变化及频谱差异。展示三个函数的 PyTorch 改写和显式 GPU DFT；展示三种算法在不同 N 下的计时、快慢顺序及原因。 | 本机代码已运行；A100 日志覆盖 N=256、512、1024、2048。 |
 | Part 2，1 分，p5–9 | Eigenfaces、compactness 累计解释方差图、PCA→随机森林测试 accuracy 和 classification report；解释中心化、SVD、150 个主成分及分类过程。 | 上次测试 64.29%；随机森林未固定种子，再运行可能变化。 |
 | Part 3.1，1 分，p9 | 两层 3×3、各 32 filters 的 CNN 与 dense 分类层、输入张量形状和测试分类表现；解释与 Part 2 的差别。 | 上次测试 81.06%。 |
-| Part 3.2，4 分，p10 | CIFAR-10 ResNet-18 的准确率、训练时间和混合精度；**在 Rangpur 现场推理和训练一轮**。>90% 且训练较快占 1 分，现场运行占 1 分；94% 及与约 360 秒 V100 基准等效或更快的时间占 2 分。 | **尚未真实训练，无正式模型和达标证据。** |
+| Part 3.2，4 分，p10 | CIFAR-10 ResNet-18 的准确率、训练时间和混合精度；**在 Rangpur 现场推理和训练一轮**。>90% 且训练较快占 1 分，现场运行占 1 分；94% 及与约 360 秒 V100 基准等效或更快的时间占 2 分。 | **A100：94.19%，228.95 秒，35 轮。** 独立推理和单轮训练已验证，仍须现场演示。 |
 | Part 4.1，1 分，p10 | 完成第二门短课 *Version Control for Teams using Git*，展示课程完成状态。 | **完成情况尚未确认。** |
 | Part 4 VAE，p11 | 展示 OASIS 训练结果及 **manifold 流形图**；解释编码器、采样、解码器和损失。重建图用于辅助解释。 | 已训练 30 轮，有模型、流形和日志。 |
 | Part 4 UNet，p12 | **现场在 test set 推理**，展示 MRI、真值、预测分割及每个标签 DSC；解释 categorical／one-hot、skip connections、训练与验证方法。 | 已训练；四类 DSC 均 >0.9。 |
@@ -85,7 +86,7 @@ scp rangpur.compute.eait.uq.edu.au:~/comp3710_lab2_20260910/results/part4_unet/s
 open results/part4_unet/segmentation.png
 ```
 
-**Part 3.2 需要先完成正式训练并准备好数据和模型，当前不能直接完成下面的推理。** 准备好 `results/part3_2/model.pt` 后，在同一 GPU 会话中执行：
+**Part 3.2 的数据和正式模型已经准备好。** 在同一 GPU 会话中执行：
 
 ```bash
 "$HOME/miniconda3/envs/torch/bin/python" -u src/comp3710_lab2/part3_2.py --evaluate
@@ -93,4 +94,6 @@ open results/part4_unet/segmentation.png
   --epochs 1 --checkpoint results/part3_2/demo/model.pt
 ```
 
-单轮训练使用独立目录。演示结束后输入 `exit` 释放 GPU 会话，再输入 `exit` 退出 SSH。
+先展示正式模型的 `Loaded ... (35 training epochs)` 和 `Test accuracy (10000 images): 94.1900%`，再运行单轮训练。完整训练日志记录了 `Training time: 228.95 s`；这个计时包含训练循环的数据加载、增强及 CUDA 同步，不含排队、下载、模型初始化、测试和保存。实际 GPU 是 A100；不要把它说成在 V100 上测得的时间。
+
+已完成的单轮检查耗时 7.60 秒、测试准确率 43.14%，其模型仅用于验证单轮流程；正式模型的结果是 94.19%。单轮命令使用 `demo/` 独立目录，不覆盖正式模型。演示结束后输入 `exit` 释放 GPU 会话，再输入 `exit` 退出 SSH。

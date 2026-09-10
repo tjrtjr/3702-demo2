@@ -1,6 +1,6 @@
 # Experiment log
 
-Actual runs are recorded below. Part 3.2 accuracy, GPU timing and Rangpur demonstration remain unverified; synthetic checks are not evidence of those outcomes. All dates and cluster clock times use AEST.
+Actual runs are recorded below. Part 3.2 training, inference and a single epoch have now been verified on Rangpur; the student must still perform the required live demonstration in front of the tutor. All dates and cluster clock times use AEST.
 
 Result paths below reflect the organization by experiment. Original logs retain their historical paths and job numbers; measured values and model weights were not changed by the move.
 
@@ -20,7 +20,18 @@ Result paths below reflect the organization by experiment. Original logs retain 
 - LFW: 1,288 images, 50×37 grayscale pixels in [0, 1], seven classes. The lecture split supplies 966 training and 322 test images.
 - **Part 2:** 150-component SVD/PCA and lecture Random Forest parameters; **207/322 correct (64.29%)**. Eigenfaces and compactness plots checked. The handout does not set the Random Forest seed, so later runs can differ. This run predicted no Ariel Sharon samples and emitted the standard classification-report warning.
 - **Part 3.1:** two 3×3/32-filter convolutions, Adam 0.001, batch size 32, 20 epochs, seed 42; **261/322 correct (81.06%)**. No test-based parameter tuning was performed.
-- **Part 3.2:** shape and learning-rate boundary checks passed. Synthetic batches verified backward propagation, parameter updates and fresh-process checkpoint inference, including a partial final batch. The slow CIFAR-10 download was stopped; no full CIFAR-10 training or Rangpur demonstration has run. >90%, 94% and GPU time targets remain unverified.
+- **Part 3.2 preliminary checks:** shape and learning-rate boundary checks passed. Synthetic batches verified backward propagation, parameter updates and fresh-process checkpoint inference, including a partial final batch. The first slow CIFAR-10 download was stopped. These preliminary checks did not establish accuracy; the subsequent real-data experiment is recorded below.
+
+## Part 3.2 CIFAR-10 on Rangpur — 2026-09-10
+
+- Code: commit `e726316888821daa2fa4fc4a14f67f4c653e0bfe`, `src/comp3710_lab2/part3_2.py` SHA256 `5d9b627d6a498c9076c8c38b63a2d082a6039a7ef16c5f2fa34a4cf92a58d049`. No training-code or hyperparameter changes were made for this run.
+- Data: original CIFAR-10 archive from the UCSD mirror, MD5 `c58f30108f718f92721af3b95e74349a`; torchvision validated all batches. Original **50,000 training / 10,000 test** split retained. Verified data are available on Rangpur and locally.
+- Hardware/environment: NVIDIA A100-PCIE-40GB on `a100-b`, PyTorch **2.13.0+cu130**, torchvision **0.28.0+cu130**, four allocated CPUs, `OMP_NUM_THREADS=4`, CUDA automatic mixed precision. Course reference ResNet-18, batch size **128**, **35 epochs**, original SGD/augmentation/learning-rate schedule.
+- Single-epoch job **586613**: submitted 17:49:03, started 17:58:05, completed 17:58:31; exit `0:0`. `--epochs 1 --checkpoint results/part3_2/demo/model.pt` trained all 50,000 images in **7.60 seconds**, cross entropy **1.66890**, test accuracy **43.14%**. Fresh-process inference reproduced 43.14%. This check established learning, complete data traversal and checkpoint reload; it was not the final accuracy benchmark.
+- Full job **586620**: submitted and started 18:06:03, completed 18:10:12; exit `0:0`. Ran `python -u src/comp3710_lab2/part3_2.py`, completed all **35 epochs**, final training cross entropy **0.02891**. Test accuracy **9,419/10,000 = 94.19%**; training time **228.94792494 seconds (3.82 minutes)**. The final 35-epoch checkpoint was evaluated; no epoch or hyperparameter was selected by test accuracy.
+- Timing includes the training loop's data loading, augmentation and CUDA synchronization, and excludes data download, model setup, test evaluation, checkpoint saving and queue wait. The complete Slurm job took **4 minutes 9 seconds**. The 94% accuracy and below-360-second numerical targets were met on the reported A100; this is not a V100 measurement.
+- A separate process in the full GPU job ran `python -u src/comp3710_lab2/part3_2.py --evaluate`: all 10,000 images again gave **94.19%**, with **1.18 seconds** measured inference time (post-training inference was **0.87 seconds**).
+- Artifacts: `results/part3_2/model.pt`, `training.log`, `inference.log`, `metrics.json`; the single-epoch model and logs are under `results/part3_2/demo/`. Checkpoint SHA256 values and Slurm timestamps are recorded in `metrics.json`. The student must still run inference and one epoch in front of the tutor.
 
 ## OASIS data validation — 2026-09-10
 

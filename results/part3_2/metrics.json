@@ -1,0 +1,39 @@
+{
+  "task": "Part 3.2: CIFAR-10 DAWNBench course-reference ResNet-18",
+  "source_commit": "e726316888821daa2fa4fc4a14f67f4c653e0bfe",
+  "script_sha256": "5d9b627d6a498c9076c8c38b63a2d082a6039a7ef16c5f2fa34a4cf92a58d049",
+  "device": "NVIDIA A100-PCIE-40GB on Rangpur a100-b",
+  "torch_version": "2.13.0+cu130",
+  "mixed_precision": true,
+  "train_images": 50000,
+  "test_images": 10000,
+  "dataset_archive_md5": "c58f30108f718f92721af3b95e74349a",
+  "dataset_archive_source": "https://cseweb.ucsd.edu/~weijian/static/datasets/cifar/cifar-10-python.tar.gz",
+  "batch_size": 128,
+  "epochs": 35,
+  "test_accuracy": 0.9419,
+  "correct_test_images": 9419,
+  "training_seconds": 228.94792493991554,
+  "training_timing_boundary": "Training loop, including data loading/augmentation and CUDA synchronization; excludes download, model setup, test evaluation, checkpoint save and queue wait.",
+  "test_inference_seconds_after_training": 0.87,
+  "fresh_process_gpu_inference_accuracy": 0.9419,
+  "fresh_process_gpu_inference_seconds": 1.18,
+  "meets_accuracy_above_90_percent": true,
+  "meets_accuracy_at_least_94_percent": true,
+  "training_below_360_seconds_on_reported_a100": true,
+  "checkpoint": "results/part3_2/model.pt",
+  "checkpoint_sha256": "db1a1ef39b3ad524a833ae54a892e62a2a19a5c4909034762bacfa21c3729961",
+  "full_training_job": 586620,
+  "one_epoch_demo": {
+    "job": 586613,
+    "training_seconds": 7.602948769927025,
+    "test_accuracy": 0.4314,
+    "checkpoint": "results/part3_2/demo/model.pt",
+    "checkpoint_sha256": "d1902c1ba747bbb4d4ff64d4aa5e6d51f1510f4e3f706bc953f51d87f5b22446"
+  },
+  "slurm_accounting_aest": [
+    "586613|COMPLETED|2026-09-10T17:49:03|2026-09-10T17:58:05|2026-09-10T17:58:31|00:00:26|0:0",
+    "586620|COMPLETED|2026-09-10T18:06:03|2026-09-10T18:06:03|2026-09-10T18:10:12|00:04:09|0:0"
+  ],
+  "demonstration_requirement": "Inference and one epoch were verified on Rangpur; the student must still run them in front of the tutor during the demonstration."
+}

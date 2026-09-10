@@ -30,8 +30,7 @@ python src/comp3710_lab2/part1.py    # 傅里叶级数、DFT/FFT、CPU/GPU 计�
 python src/comp3710_lab2/part2.py    # Eigenfaces/PCA、随机森林
 python src/comp3710_lab2/part3.py    # Part 3.1：LFW CNN，训练 20 轮
 
-# Part 3.2：CIFAR-10，完整训练 35 轮并保存模型
-python src/comp3710_lab2/part3_2.py
+# Part 3.2：加载已在 Rangpur 训练的 CIFAR-10 模型
 python src/comp3710_lab2/part3_2.py --evaluate --checkpoint results/part3_2/model.pt
 ```
 
@@ -44,7 +43,9 @@ python src/comp3710_lab2/part3_2.py --epochs 1 --checkpoint results/part3_2/demo
 python src/comp3710_lab2/part3_2.py --evaluate --checkpoint results/part3_2/demo/model.pt
 ```
 
-单轮检查不能证明达到准确率要求。**Part 3.2 尚未完成真实 CIFAR-10 训练和 Rangpur 演示**，>90%、94% 及 GPU 耗时目标仍未验证。
+**Part 3.2 已在 Rangpur A100 完成 35 轮混合精度训练：测试准确率 94.19%，训练耗时 228.95 秒。** 正式模型独立加载后仍为 94.19%；真实数据单轮训练及其模型重载也已验证。模型和日志在 `results/part3_2/`，完整指标见 [metrics.json](results/part3_2/metrics.json)。完整训练可在 Rangpur GPU 节点运行不带 `--evaluate` 的命令；当前本机和集群已有模型，无需为展示重新跑 35 轮。
+
+单轮检查本身不代表最终准确率。Tutor 演示时仍须在 Rangpur 当场运行推理和一轮训练，命令见 [展示入口](results/README.md#rangpur-现场运行)。
 
 ## Part 4 数据、运行和保存
 
@@ -99,7 +100,7 @@ VAE/GAN 对应脚本为 `part4.py` / `part4_3.py`，实验目录改为 `part4_va
 
 - Part 1 要求实际比较 GPU 张量 DFT、NumPy 朴素 DFT 和 NumPy FFT，并改变数据大小；没有 CUDA 时脚本会留下待测项。本次 A100 实测已完成，见 `results/part1/gpu_timing.log`。
 - Part 2、Part 3.1 没有明确要求 GPU，本机 CPU 已运行。
-- Part 3.2 要求准确率与速度测试，以及 Rangpur 现场推理和单轮训练；这些仍待完成。
+- Part 3.2 已实测 94.19% / 228.95 秒（A100），并通过独立推理和单轮训练检查；tutor 面前的现场演示仍需完成。
 - Part 4 三个模型已训练并保存证据；现场推理、结果解释和 GAN 真实度评判仍属于演示环节。Git 短课完成情况尚未提供。
 
 课程还要求个人 GitHub 项目、相关提交记录和来源说明。此项目使用的仓库地址为 [tjrtjr/3702-demo2](https://github.com/tjrtjr/3702-demo2)。

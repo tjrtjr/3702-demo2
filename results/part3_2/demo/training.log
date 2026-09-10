@@ -1,0 +1,17 @@
+2026-09-10T17:58:05+10:00
+a100-b
+5d9b627d6a498c9076c8c38b63a2d082a6039a7ef16c5f2fa34a4cf92a58d049  src/comp3710_lab2/part3_2.py
+torch: 2.13.0+cu130 torchvision: 0.28.0+cu130 GPU: NVIDIA A100-PCIE-40GB
+Device: cuda; mixed precision: True
+NVIDIA A100-PCIE-40GB
+Epoch 1/1: cross entropy=1.66890, time=7.60 s
+Training time: 7.60 s (0.13 min)
+Test accuracy (10000 images): 43.1400%
+Inference time: 0.92 s
+Saved results/part3_2/demo/model.pt
+Device: cuda; mixed precision: True
+NVIDIA A100-PCIE-40GB
+Loaded results/part3_2/demo/model.pt (1 training epochs)
+Test accuracy (10000 images): 43.1400%
+Inference time: 1.17 s
+2026-09-10T17:58:31+10:00

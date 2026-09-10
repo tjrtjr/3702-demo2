@@ -1,0 +1,5 @@
+Device: cuda; mixed precision: True
+NVIDIA A100-PCIE-40GB
+Loaded /home/Student/s4983489/comp3710_lab2_20260910/results/part3_2/model.pt (35 training epochs)
+Test accuracy (10000 images): 94.1900%
+Inference time: 1.18 s
